@@ -122,9 +122,10 @@ app.post('/merge', async (req, res) => {
         throw new Error(`Could not parse PDF: ${e.message}`);
       }
 
-      const pages = await mergedPdf.copyPagesFrom(srcDoc, srcDoc.getPageIndices());
-      pages.forEach(page => mergedPdf.addPage(page));
-      console.log(`✓ Added ${pages.length} page(s)`);
+      const pageIndices = srcDoc.getPageIndices();
+      const copiedPages = await mergedPdf.copyPages(srcDoc, pageIndices);
+      copiedPages.forEach(page => mergedPdf.addPage(page));
+      console.log(`✓ Added ${copiedPages.length} page(s)`);
 
     } catch (e) {
       console.warn(`✗ Failed for ${cleanUrl.substring(0, 60)}...: ${e.message}`);
